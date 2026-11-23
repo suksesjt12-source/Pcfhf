@@ -1,0 +1,7 @@
+aiohttp==3.11.11
+aiortc==1.9.0
+av==13.1.0
+mss==10.0.0
+numpy==2.2.1
+opencv-python-headless==4.10.0.84
+pynput==1.7.7
