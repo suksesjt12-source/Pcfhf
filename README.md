@@ -1,40 +1,52 @@
 # Storm Cloud Gaming
 
-Android starter project for a cloud-streaming client concept.
+Android WebRTC game-streaming client plus a Python desktop host prototype.
 
-## Implemented in this starter
+## What is implemented
 
-- Native Android application built with Kotlin and Jetpack Compose.
-- Landscape dashboard with a Naruto-inspired orange/black theme.
-- Selectable catalog entries for Naruto Storm titles.
-- Host-address field and explicit connection-state messaging.
-- Streaming-quality preference selector (adaptive, 720p, 1080p).
-- Touch-controller layout preview with directional pad and gameplay buttons.
-- GitHub Actions workflow that builds and uploads a debug APK artifact.
+- Android Kotlin/Jetpack Compose client with a WebRTC peer connection.
+- WebSocket signaling to a host using a bearer token.
+- Remote video rendering through the WebRTC video track.
+- WebRTC data channel for basic keyboard input events.
+- Python host prototype that captures the desktop and publishes video.
+- Host-side token check and a health endpoint.
+- GitHub Actions workflow to build a debug APK.
 
-## Not implemented yet
+## Current limitations
 
-- Actual video/audio streaming or game-input transport.
-- Automatic discovery of verified public GPU hosts.
-- A cloud GPU server or game licenses.
-- Functional touch input forwarding to a running game.
+- This is an early LAN prototype, not a production cloud-gaming service.
+- Host audio capture and Android audio playback are not implemented yet.
+- The Android on-screen controls currently send only a small keyboard mapping; a full configurable gamepad/touch overlay is still required.
+- The host uses a STUN server for initial connectivity. Internet play usually requires TURN, TLS/WSS, firewall configuration, and a secured deployment.
+- No public GPU server directory or free GPU capacity is included. The PC/server must be owned or legitimately rented by the user and must have the game installed.
+- The current Android UI uses a development WebSocket connection. Do not expose the host directly to the public internet.
 
-The controller screen is currently a visual preview only. A real gaming session requires a legitimate compatible host running a game and a streaming client/protocol integrated into this Android app. The app does not fabricate server listings or promise unlimited free GPU access.
+## Start the host on a PC
 
-## Build an APK
+See [host/README.md](host/README.md). In short:
+
+```bash
+cd host
+python -m venv .venv
+# Windows: .venv\\Scripts\\activate
+# Linux: source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Set a random secret of at least 24 characters in `STORM_HOST_TOKEN`, then run `python host.py`. Keep the PC and Android phone on the same Wi-Fi/LAN for the first test. Enter the PC's LAN IP and port (default `8765`) plus the same token in the Android app.
+
+## Build the Android APK
 
 1. Open the repository's **Actions** tab.
 2. Select **Android APK Build**.
-3. Wait for the workflow to finish successfully.
-4. Open the run and download the `storm-cloud-gaming-debug` artifact.
-5. Extract the ZIP to obtain `app-debug.apk`.
+3. Wait for a successful run.
+4. Download the `storm-cloud-gaming-debug` artifact and extract `app-debug.apk`.
 
-The workflow also runs automatically when changes are pushed to `main`.
+The build runs automatically after pushes to `main`.
 
-## Requirements
+## Build versions
 
-- Android 8.0 (API 26) or newer
-- JDK 17
-- Gradle 8.9
-- Android Gradle Plugin 8.7.3
-- Android SDK Platform 35
+- Android: Kotlin, Jetpack Compose, WebRTC, OkHttp
+- Android minimum: API 26
+- JDK 17, Gradle 8.9, Android Gradle Plugin 8.7.3
+- Python host: Python 3.10–3.12
