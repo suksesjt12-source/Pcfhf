@@ -15,6 +15,8 @@ import org.webrtc.IceCandidate
 import org.webrtc.MediaConstraints
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
+import org.webrtc.RtpTransceiver
+import org.webrtc.MediaStreamTrack
 import org.webrtc.SdpObserver
 import org.webrtc.SessionDescription
 import org.webrtc.SurfaceViewRenderer
@@ -130,6 +132,7 @@ class WebRtcSession(
                 }
             }
         })
+        peer?.addTransceiver(MediaStreamTrack.MediaType.MEDIA_TYPE_VIDEO, RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.RECV_ONLY))
         inputChannel = peer?.createDataChannel("game-input", DataChannel.Init())
         peer?.createOffer(object : SdpObserver {
             override fun onCreateSuccess(sdp: SessionDescription) {
