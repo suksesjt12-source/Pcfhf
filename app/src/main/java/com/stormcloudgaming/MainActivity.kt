@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.webrtc.SurfaceViewRenderer
+import org.webrtc.SurfaceViewRenderer
 
 private val Ink = Color(0xFF101014)
 private val Panel = Color(0xFF202027)
@@ -53,7 +53,7 @@ fun StormApp() {
                 Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("STORM STREAM", color = Orange, fontWeight = FontWeight.Black, fontSize = 20.sp, modifier = Modifier.weight(1f))
-                        TextButton(onClick = { session?.close(); session = null; showPlayer = false; status = "Terputus" }) { Text("PUTUS") }
+                        TextButton(onClick = { session = null; showPlayer = false; status = "Terputus" }) { Text("PUTUS") }
                     }
                     AndroidView(factory = { renderer }, modifier = Modifier.weight(1f).fillMaxWidth().background(Color.Black))
                     Text(status, color = Muted, fontSize = 11.sp)
@@ -87,7 +87,6 @@ fun StormApp() {
                         OutlinedTextField(value = host, onValueChange = { host = it }, label = { Text("IP host:port atau ws://host:port") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         OutlinedTextField(value = token, onValueChange = { token = it }, label = { Text("Token host (min. 24 karakter)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                         Button(onClick = {
-                            session?.close()
                             val next = WebRtcSession(context) { status = it }
                             session = next
                             next.connect(host.trim(), token)
